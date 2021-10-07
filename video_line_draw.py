@@ -47,17 +47,17 @@ if __name__ == "__main__":
     img_path_png = ""
     while video_file.isOpened():
         ret, img = video_file.read()
+        number_str = str(count_frame)
+        zero_filled_number = number_str.zfill(5)
+        tmp_image_name = "im" + str(zero_filled_number)
+        img_path_png = tmp_dir + tmp_image_name + "_.png"
         if ret:
-            if os.path.isfile(img_path_png):
+            if os.path.isfile(tmp_dir + tmp_image_name + ".png"):
                 # avoid to recreate the same image
                 pass
             else:
-                number_str = str(count_frame)
-                zero_filled_number = number_str.zfill(5)
-                tmp_image_name = "im" + str(zero_filled_number)
                 height, width = img.shape[0], img.shape[1]
                 # get svg sketch image
-                img_path_png = tmp_dir + tmp_image_name + "_.png"
                 img_path_svg = tmp_dir + tmp_image_name + ".svg"
                 img_path_png2 = tmp_dir + tmp_image_name + ".png"
                 # save img as png
@@ -67,7 +67,7 @@ if __name__ == "__main__":
                 save_svg2png(img_path_svg, img_path_png2, height, width)
                 os.remove(img_path_png)
                 os.remove(img_path_svg)
-                count_frame += 1
+            count_frame += 1
         else:
             break
     os.system("ffmpeg -y -start_number 0 -i im%05d.png -c:v libx264 -r 24.97 " + outpath_video + "reconstructed_video.mp4")
@@ -75,3 +75,4 @@ if __name__ == "__main__":
     for rm_img in rm_imgs:
         os.remove(rm_img)
     print("done")
+
