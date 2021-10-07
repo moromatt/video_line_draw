@@ -6,7 +6,6 @@ __copyright__ = "Copyright 2021, Planet Earth"
 
 import os
 import argparse
-import pathlib
 import cv2 as cv
 from cairosvg import svg2png
 
