@@ -63,7 +63,7 @@ if __name__ == "__main__":
                 img_path_png2 = tmp_dir + tmp_image_name + ".png"
                 # save img as png
                 cv.imwrite(img_path_png, img)
-                os.system("python ./linedraw/linedraw.py -i " + img_path_png + " -o " + img_path_svg)
+                os.system("python ./linedraw.py -i " + img_path_png + " -o " + img_path_svg)
                 # get png from svg
                 save_svg2png(img_path_svg, img_path_png2, height, width)
                 os.remove(img_path_png)
