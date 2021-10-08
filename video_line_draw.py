@@ -60,6 +60,8 @@ if __name__ == "__main__":
                 # get svg sketch image
                 img_path_svg = tmp_dir + tmp_image_name + ".svg"
                 img_path_png2 = tmp_dir + tmp_image_name + ".png"
+                img_path_jpg = tmp_dir + tmp_image_name + ".jpg"
+
                 # save img as png
                 cv.imwrite(img_path_png, img)
                 os.system("python ./linedraw.py -i " + img_path_png + " -o " + img_path_svg)
@@ -67,6 +69,10 @@ if __name__ == "__main__":
                 save_svg2png(img_path_svg, img_path_png2, height, width)
                 os.remove(img_path_png)
                 os.remove(img_path_svg)
+                image_to_jpg = cv.imread(img_path_png2, cv.IMREAD_UNCHANGED)
+                image_to_jpg = ~image_to_jpg[:, :, 3]  # extract and invert that alpha
+                cv.imwrite(img_path_jpg, image_to_jpg, [int(cv.IMWRITE_JPEG_QUALITY), 100])
+                os.remove(img_path_png2)
             count_frame += 1
         else:
             break
@@ -75,4 +81,3 @@ if __name__ == "__main__":
     for rm_img in rm_imgs:
         os.remove(rm_img)
     print("done")
-
