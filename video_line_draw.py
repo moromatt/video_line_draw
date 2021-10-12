@@ -77,6 +77,7 @@ if __name__ == "__main__":
         pass
 
     # get images
+    contour = 2
     count_frame = 0
     total_frame = int(video_file.get(cv.CAP_PROP_FRAME_COUNT))
     img_path_png = ""
@@ -90,8 +91,6 @@ if __name__ == "__main__":
         progressBar(count_frame, total_frame)
         if args.contour:
             contour = contour_rotation[count_frame % len(contour_rotation)]
-        else:
-            contour = 2
         if ret:
             if os.path.isfile(tmp_dir + tmp_image_name + ".jpg"):
                 # avoid to recreate the same image
@@ -107,9 +106,9 @@ if __name__ == "__main__":
                 # save img as png
                 cv.imwrite(img_path_png, img)
                 # os.system("python " + linedraw_py + " -r " + str(width) + " -i " + img_path_png + " -o " + img_path_svg)
-                call_linedraw(linedraw_py, img_path_png, img_path_svg, width)
+                call_linedraw(linedraw_py, img_path_png, img_path_svg, width, contour)
                 # get png from svg
-                save_svg2png(img_path_svg, img_path_png2, height, width, contour)
+                save_svg2png(img_path_svg, img_path_png2, height, width)
                 os.remove(img_path_png)
                 os.remove(img_path_svg)
                 image_to_jpg = cv.imread(img_path_png2, cv.IMREAD_UNCHANGED)
