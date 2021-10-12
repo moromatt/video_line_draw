@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 """video_line_draw.py."""
 __author__ = "amxrfe"
-__copyright__ = "Copyright 2021, Planet Earth"
+__copyright__ = "2021, Planet Earth"
 
 
 import os
+import pathlib
 import argparse
 import cv2 as cv
 from cairosvg import svg2png
@@ -65,7 +66,7 @@ if __name__ == "__main__":
         print("dude, no video selected")
         exit(-1)
     video_file = cv.VideoCapture(args.input)
-
+    video_name = (pathlib.Path(args.input)).stem
     d = os.path.dirname(__file__)  # directory of script
     tmp_dir = r'{}/tmp_image/'.format(d)  # path to be created
     outpath_video = r'{}/output_video/'.format(d)  # path to be created
@@ -80,8 +81,9 @@ if __name__ == "__main__":
     contour = 2
     count_frame = 0
     total_frame = int(video_file.get(cv.CAP_PROP_FRAME_COUNT))
+    frame_rate = video_file.get(cv.CAP_PROP_FPS)
     img_path_png = ""
-    contour_multiplier = int(video_file.get(cv.CAP_PROP_FPS)//2)  # each half second contour simplification will change
+    contour_multiplier = int(frame_rate//2)  # each half second contour simplification will change
     contour_rotation = [2] * contour_multiplier + [3] * contour_multiplier + [2] * contour_multiplier + [1] * contour_multiplier
     while video_file.isOpened():
         ret, img = video_file.read()
@@ -118,10 +120,10 @@ if __name__ == "__main__":
             count_frame += 1
         else:
             break
-    os.system("ffmpeg -y -start_number 0 -i " + tmp_dir + "im%05d.jpg -c:v libx264 -r 24.97 " + outpath_video + "_reconstructed_video.mp4")
+    os.system("ffmpeg -y -start_number 0 -i " + tmp_dir + "im%05d.jpg -c:v libx264 -r " + str(frame_rate) + outpath_video + "_" + video_name)
     # fix i frame re encoding
-    os.system("ffmpeg -y -i " + outpath_video + "_reconstructed_video.mp4 -c:v libx264 -r 24.97 " + outpath_video + "reconstructed_video.mp4")
-    os.remove(outpath_video + "_reconstructed_video.mp4")
+    os.system("ffmpeg -y -i " + outpath_video + "_" + video_name + " -c:v libx264 -r " + str(frame_rate) + outpath_video + video_name)
+    os.remove(outpath_video + "_" + video_name)
     rm_imgs = [f for f in os.listdir(tmp_dir) if f.endswith('.jpg') or f.endswith('.png')]
     for rm_img in rm_imgs:
         os.remove(tmp_dir + rm_img)
