@@ -120,10 +120,10 @@ if __name__ == "__main__":
             count_frame += 1
         else:
             break
-    os.system("ffmpeg -y -start_number 0 -i " + tmp_dir + "im%05d.jpg -c:v libx264 -r " + str(frame_rate) + outpath_video + "_" + video_name)
+    os.system("ffmpeg -y -start_number 0 -i " + tmp_dir + "im%05d.jpg -c:v libx264 -r " + str(frame_rate) + " " + outpath_video + "_" + video_name + ".mp4")
     # fix i frame re encoding
-    os.system("ffmpeg -y -i " + outpath_video + "_" + video_name + " -c:v libx264 -r " + str(frame_rate) + outpath_video + video_name)
-    os.remove(outpath_video + "_" + video_name)
+    os.system("ffmpeg -y -i " + outpath_video + "_" + video_name + ".mp4" + " -c:v libx264 -r " + str(frame_rate) + " " + outpath_video + video_name + ".mp4")
+    os.remove(outpath_video + "_" + video_name + ".mp4")
     rm_imgs = [f for f in os.listdir(tmp_dir) if f.endswith('.jpg') or f.endswith('.png')]
     for rm_img in rm_imgs:
         os.remove(tmp_dir + rm_img)
